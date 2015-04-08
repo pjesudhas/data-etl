@@ -7,6 +7,12 @@
     <groupId>com.serendio</groupId>
     <artifactId>data-etl</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+<dependencies>
+    <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk</artifactId>
+        <version>1.9.25</version>
+    </dependency>
+</dependencies>
 
 </project>
