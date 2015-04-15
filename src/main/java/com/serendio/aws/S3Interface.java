@@ -9,8 +9,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 
 
 public class S3Interface {
@@ -23,8 +22,27 @@ public class S3Interface {
     public static void main(String[] args) throws IOException
     {
         S3Interface obj = new S3Interface();
+        obj.listBucketObjects("izeadna","");
+    }
 
-
+    void listBucketObjects(String bucketname,String prefix)
+    {
+        ListObjectsRequest listObjectsRequest = null;
+        if(prefix.isEmpty() == true)
+            listObjectsRequest = new ListObjectsRequest().withBucketName(bucketname);
+        else
+            listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(prefix);
+        ObjectListing objectListing;
+        do
+        {
+            objectListing = s3Client.listObjects(listObjectsRequest);
+            for (S3ObjectSummary objectSummary :objectListing.getObjectSummaries())
+            {
+                System.out.println( " - " + objectSummary.getKey() + "  " +"(size = " + objectSummary.getSize() +")");
+                printObjectFromBucket(bucketName,objectSummary.getKey());
+            }
+            listObjectsRequest.setMarker(objectListing.getNextMarker());
+        } while (objectListing.isTruncated());
     }
 
     void printObjectFromBucket(String bucketName,String key)
